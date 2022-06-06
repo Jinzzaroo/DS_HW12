@@ -407,16 +407,20 @@ int hashing(int *a, int **ht)   //**ht 사용하여 main에서 *ht control 가�
     return 0;
 }
 
+// 해시 테이블 속 키값 찾는 함수
 int search(int *ht, int key)
 {
     int index = hashCode(key);
 
+    // 해당 key값 바로 찾으면 index 반환
     if (ht[index] == key)
         return index;
 
+    // 해당 key 값을 찾을 때까지 index 값 증가시키면서 조사
     while (ht[++index] != key)
     {
         index = index % MAX_HASH_TABLE_SIZE;
     }
+    // while 반복문 끝나면 index 찾은 거니까 index 반환
     return index;
 }
