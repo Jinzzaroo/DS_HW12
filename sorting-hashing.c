@@ -348,25 +348,30 @@ int quickSort(int *a, int n)
     return 0;
 }
 
+// 해시 함수(by Division)
 int hashCode(int key)
 {
-    return key % MAX_HASH_TABLE_SIZE;
+    return key % MAX_HASH_TABLE_SIZE;   //키값을 테이블 크기로 나눈 나머지를 해시 주소로 사용
 }
 
-int hashing(int *a, int **ht)
+int hashing(int *a, int **ht)   //**ht 사용하여 main에서 *ht control 가능케 한다
 {
     int *hashtable = NULL;
 
+    //해시 테이블이 NULL일 때
     if (*ht == NULL)
     {
+        //*ht에 메모리 할당
         hashtable = (int *)malloc(sizeof(int) * MAX_ARRAY_SIZE);
         *ht = hashtable;
     }
     else
     {
+        //NULL이 아니면 *ht 재활용
         hashtable = *ht;
     }
 
+    //해시 테이블의 값 -1로 초기화 (-1이면 비어있다는 뜻)
     for (int i = 0; i < MAX_HASH_TABLE_SIZE; i++)
         hashtable[i] = -1;
 
@@ -376,12 +381,16 @@ int hashing(int *a, int **ht)
     for (int i = 0; i < MAX_ARRAY_SIZE; i++)
     {
         key = a[i];
-        hashcode = hashCode(key);
+        hashcode = hashCode(key);       // 키값을 해시 함수 이용하여 해시 주소로 변경
 
+        // 해시 테이블 속 버킷 주소가 비어있으면 키값 넣어줌
         if (hashtable[hashcode] == -1)
         {
             hashtable[hashcode] = key;
         }
+
+        // 해시 테이블 속 버킷 주소에 키값이 이미 존재하면 (충돌 발생 -> 오버로드)
+        // 하나씩 index를 증가시켜 비어 있는 버킷 주소 index 를 찾아서 그 index에 key 넣어줌
         else
         {
 
@@ -389,7 +398,7 @@ int hashing(int *a, int **ht)
 
             while (hashtable[index] != -1)
             {
-                index = (++index) % MAX_HASH_TABLE_SIZE;
+                index = (++index) % MAX_HASH_TABLE_SIZE;    //마지막 index에서 다음 index는 0
             }
             hashtable[index] = key;
         }
