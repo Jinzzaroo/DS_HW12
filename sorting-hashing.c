@@ -24,13 +24,12 @@ int hashCode(int key);
 int hashing(int *a, int **ht);
 int search(int *ht, int key);
 
-
 int main()
 {
     char command;
     int *array = NULL;
     int *hashtable = NULL;
-    //key, index : -1로 초기화
+    // key, index : -1로 초기화
     int key = -1;
     int index = -1;
 
@@ -175,6 +174,7 @@ void printArray(int *a)
     printf("\n");
 }
 
+// 선택 정렬
 int selectionSort(int *a)
 {
     int min;
@@ -188,16 +188,19 @@ int selectionSort(int *a)
 
     for (i = 0; i < MAX_ARRAY_SIZE; i++)
     {
-        minindex = i;
-        min = a[i];
+        minindex = i; //기준 위치 설정
+        min = a[i];   //기준 위치의 값을 일단 min으로 설정
+
         for (j = i + 1; j < MAX_ARRAY_SIZE; j++)
         {
+            //기준 위치 바로 다음부터 배열 끝까지 조사하여 기준 위치의 값과 비교했을 때 더 작은 값이 있으면
             if (min > a[j])
             {
-                min = a[j];
-                minindex = j;
+                min = a[j];   // 그 값을 최솟값으로 select
+                minindex = j; // 그 위치를 minindex로 select
             }
         }
+        //기준 위치와 방금 찾은 최솟값의 위치 교환
         a[minindex] = a[i];
         a[i] = min;
     }
@@ -207,6 +210,7 @@ int selectionSort(int *a)
     return 0;
 }
 
+// 삽입 정렬
 int insertionSort(int *a)
 {
     int i, j, t;
@@ -218,13 +222,16 @@ int insertionSort(int *a)
 
     for (i = 1; i < MAX_ARRAY_SIZE; i++)
     {
-        t = a[i];
-        j = i;
+        t = a[i]; // t에 정렬 대상 원소 저장
+        j = i;    // 정렬 대상 원소의 인덱스를 j에 저장
+
+        //이미 정렬된 마지막 원소 a[j-1]부터 역순으로 정렬 대상 원소 t와 비교하여 a[j-1] < t < a[j]인 j 찾을 때까지 반복
         while (a[j - 1] > t && j > 0)
         {
             a[j] = a[j - 1];
             j--;
         }
+        // 찾은 자리에 insert
         a[j] = t;
     }
 
@@ -234,6 +241,7 @@ int insertionSort(int *a)
     return 0;
 }
 
+// 버블 정렬
 int bubbleSort(int *a)
 {
     int i, j, t;
@@ -245,10 +253,12 @@ int bubbleSort(int *a)
 
     for (i = 0; i < MAX_ARRAY_SIZE; i++)
     {
-        for (j = 0; j < MAX_ARRAY_SIZE; j++)
+        for (j = 1; j < MAX_ARRAY_SIZE; j++)
         {
+            //인접한 두 원소끼리 비교하여 정렬
             if (a[j - 1] > a[j])
             {
+                // a[j-1]과 a[j] 위치 변경
                 t = a[j - 1];
                 a[j - 1] = a[j];
                 a[j] = t;
@@ -262,6 +272,7 @@ int bubbleSort(int *a)
     return 0;
 }
 
+// 셸 정렬
 int shellSort(int *a)
 {
     int i, j, k, h, v;
@@ -271,14 +282,17 @@ int shellSort(int *a)
 
     printArray(a);
 
+    // 간격(interval)을 원소 개수의 1/2로 설정하고 한 단계 끝날때 마다 반으로 감소
     for (h = MAX_ARRAY_SIZE / 2; h > 0; h /= 2)
     {
         for (i = 0; i < h; i++)
         {
+            // interval만큼 떨어져 있는 원소들을 선택
             for (j = i + h; j < MAX_ARRAY_SIZE; j += h)
             {
                 v = a[j];
                 k = j;
+                // 선택한 원소들을 대상으로 삽입 정렬 수행
                 while (k > h - 1 && a[k - h] > v)
                 {
                     a[k] = a[k - h];
@@ -294,6 +308,7 @@ int shellSort(int *a)
     return 0;
 }
 
+// 퀵 정렬
 int quickSort(int *a, int n)
 {
     int v, t;
@@ -301,29 +316,33 @@ int quickSort(int *a, int n)
 
     if (n > 1)
     {
-        v = a[n - 1];
+        v = a[n - 1]; //마지막 원소를 피봇으로 설정
         i = -1;
         j = n - 1;
 
         while (1)
         {
-            while (a[++i] < v)
+            while (a[++i] < v) // 피봇보다 큰 a[L] 찾을 때까지 i++
                 ;
-            while (a[--j] > v)
+            while (a[--j] > v) // 피봇보다 작은 a[R] 찾을 때까지 j--
                 ;
 
+            // 퀵 정렬이 끝나는 조건
             if (i >= j)
                 break;
+
+            // a[L](a[i])와 a[R](a[j])를 서로 교환
             t = a[i];
             a[i] = a[j];
             a[j] = t;
         }
+        // 마지막 단계 : 피봇과 a[L] 서로 교환
         t = a[i];
         a[i] = a[n - 1];
         a[n - 1] = t;
 
-        quickSort(a, i);
-        quickSort(a + i + 1, n - i - 1);
+        quickSort(a, i);                 // 피봇의 왼쪽 부분집합에 대한 퀵 정렬
+        quickSort(a + i + 1, n - i - 1); // 피봇의 오른쪽 부분집합에 대한 퀵 정렬
     }
 
     return 0;
